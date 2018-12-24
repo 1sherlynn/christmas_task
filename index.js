@@ -1,7 +1,9 @@
 const express = require('express')
 const app = express()
+var api = require('./api')
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
 
 const port = 8001
 
@@ -18,5 +20,7 @@ app.post('/', (req, res) => {
     res.json(req.body)
     console.log(req.body)
 })
+
+app.use('/api', api)
 
 app.listen(port, () => console.log(`App listening on port ${port}!`))
