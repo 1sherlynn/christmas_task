@@ -16,6 +16,7 @@ db.once('open', function() {
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(express.static('public'))
 
 const port = 8001
 
