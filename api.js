@@ -26,11 +26,38 @@ router.route('/books')
   .get(function (req, res) {
   	var query = q2m(req.query);
   	console.log(query)
-  	BookModel.find(query.criteria, query.options).then(books => res.send(books))
-  	.catch(err => {
-  		res.send(err)
-  		console.log(err)
-  	})
+  	if(query.criteria.count) {
+  		BookModel.countDocuments({}, function (err, count) {
+	  	if (err) {
+	        res.send(err);
+	        return;
+	    }
+	    res.json({ count: count });
+	  	console.log('There are %d books', count);
+	})
+
+  	} else {
+  		BookModel.find(query.criteria, query.options.fields)
+		  	.sort(query.options.sort)
+		  	.limit(query.options.limit)
+		  	.skip(query.options.skip)
+	  	.then(books => res.send(books))
+	  	.catch(err => {
+	  		res.send(err)
+	  		console.log(err)
+	  	})
+  	}
+
+
+
+  	// BookModel.find().sort({year: -1}).then(books => res.send(books))
+  	// .catch(err => {
+  	// 	res.send(err)
+  	// 	console.log(err)
+  	// })
+
+
+
   })
   .post(function (req, res) {
     let book = new BookModel({ title: req.body.title, author: req.body.author, year: req.body.year })
