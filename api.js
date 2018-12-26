@@ -1,6 +1,7 @@
 var express = require('express')
 var router = express.Router()
 var moment = require('moment');
+var q2m = require('query-to-mongo')
 let BookModel = require('./book')
 
 // middleware that is specific to this router
@@ -23,7 +24,13 @@ router.post('/', function (req, res) {
 
 router.route('/books')
   .get(function (req, res) {
-  	BookModel.find().then(books => res.send(books))
+  	var query = q2m(req.query);
+  	console.log(query)
+  	BookModel.find(query.criteria, query.options).then(books => res.send(books))
+  	.catch(err => {
+  		res.send(err)
+  		console.log(err)
+  	})
   })
   .post(function (req, res) {
     let book = new BookModel({ title: req.body.title, author: req.body.author, year: req.body.year })
@@ -48,7 +55,6 @@ router.route('/books/:id')
     		res.send(err)
     		console.error(err) 
     	})
-    // 5c23032e643bc21ae507bb62 ==> book 1
   })
   .put(function (req, res) {
     BookModel.findOneAndUpdate(
@@ -58,7 +64,7 @@ router.route('/books/:id')
     	  author: req.body.author,
     	  year: req.body.year
     	},
-    	{ new: true, runValidators: true })  // return updated doc and validate before update 
+    	{ new: true, runValidators: true })  // return updated entry and validate before update 
   	.then(book => { 
   		console.log(book) 
   		res.send(book)
