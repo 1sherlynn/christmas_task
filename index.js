@@ -1,4 +1,6 @@
 const express = require('express')
+var sassMiddleware = require('node-sass-middleware');
+var path = require('path');
 const app = express()
 var api = require('./api')
 
@@ -14,16 +16,21 @@ db.once('open', function() {
     console.log("Successfully connected to Mongo Server.");
 });
 
+app.use(sassMiddleware({
+    /* Options */
+    src: __dirname + '/src/styles',
+    dest: __dirname + '/public/css',
+    indentedSyntax : false,
+    debug: true,
+    outputStyle: 'compressed',
+    prefix:  '/stylesheets'  // Where prefix is at <link rel="stylesheets" href="stylesheets/style.css"/>
+}));
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(express.static('public'))
+app.use(express.static(path.join(__dirname, 'public')))
 
 const port = 8001
-
-// app.get('/', (req, res) => {
-// 	res.send('Hello World!123')
-// 	console.log(req.query)
-// })
 
 app.get('/', (req, res) => {
     res.json({ message: 'Hello world' })
