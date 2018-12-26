@@ -23,7 +23,7 @@ router.post('/', function (req, res) {
 
 router.route('/books')
   .get(function (req, res) {
-    res.send('Get all books')
+  	BookModel.find().then(books => res.send(books))
   })
   .post(function (req, res) {
     let book = new BookModel({ title: req.body.title, author: req.body.author, year: req.body.year })
