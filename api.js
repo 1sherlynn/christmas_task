@@ -1,6 +1,7 @@
 var express = require('express')
 var router = express.Router()
 var moment = require('moment');
+let BookModel = require('./book')
 
 // middleware that is specific to this router
 router.use(function timeLog(req, res, next) {
@@ -19,23 +20,63 @@ router.post('/', function (req, res) {
   res.send('Sub-route POST to /api')
 })
 
+
 router.route('/books')
   .get(function (req, res) {
     res.send('Get all books')
   })
   .post(function (req, res) {
-    res.send('Create a book')
+    let book = new BookModel({ title: req.body.title, author: req.body.author, year: req.body.year })
+	book.save()
+	.then(book => { 
+		res.send(book)
+		console.log(book) 
+	}).catch(err => { 
+		console.error(err) 
+	})
   })
 
 router.route('/books/:id')
   .get(function (req, res) {
-    res.send(`Get a book with id: ${req.params.id}`)
+    BookModel.find({ _id: req.params.id })
+    .then(book => { 
+    	res.send(book)
+    	console.log(book)
+
+    	}).catch(err => { console.error(err) })
+    // 5c23032e643bc21ae507bb62 ==> book 1
   })
   .put(function (req, res) {
-    res.send(`Edit a book with id: ${req.params.id}`)
+    BookModel.findOneAndUpdate(
+    	{ _id: req.params.id}, // search query 
+    	 // field:values to update
+    	{ title: req.body.title,
+    	  author: req.body.author,
+    	  year: req.body.year
+    	},
+    	{ new: true, runValidators: true })  // return updated doc and validate before update 
+  	.then(book => { 
+  		console.log(book) 
+  		res.send(book)
+  	})
+  	.catch(err => { 
+  		console.error(err) 
+  		res.send(err)
+  	})
   })
   .delete(function (req, res) {
-    res.send(`Delete a book with id: ${req.params.id}`)
+  	BookModel
+	  .findOneAndRemove({
+	    _id: req.params.id
+	  })
+	  .then(response => {
+	  	res.send(response)
+	    console.log(response)
+	  })
+	  .catch(err => {
+	  	res.send(err)
+	    console.error(err)
+	  })
   })
 
 
