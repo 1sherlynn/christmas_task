@@ -32,6 +32,7 @@ router.route('/books')
 		res.send(book)
 		console.log(book) 
 	}).catch(err => { 
+		res.send(err)
 		console.error(err) 
 	})
   })
@@ -43,7 +44,10 @@ router.route('/books/:id')
     	res.send(book)
     	console.log(book)
 
-    	}).catch(err => { console.error(err) })
+    	}).catch(err => { 
+    		res.send(err)
+    		console.error(err) 
+    	})
     // 5c23032e643bc21ae507bb62 ==> book 1
   })
   .put(function (req, res) {
