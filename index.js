@@ -11,6 +11,7 @@ mongoose.connect(db_url);
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 
+
 db.on('error', console.error.bind(console, 'MongoDB connection error: '));
 db.once('open', function() {
     console.log("Successfully connected to Mongo Server.");
@@ -33,7 +34,8 @@ app.use(express.static(path.join(__dirname, 'public')))
 const port = 8001
 
 app.get('/', (req, res) => {
-    res.json({ message: 'Hello world' })
+	res.redirect('/app.html');
+    // res.json({ message: 'Hello world' })
 })
 
 app.post('/', (req, res) => {
@@ -41,6 +43,6 @@ app.post('/', (req, res) => {
     console.log(req.body)
 })
 
-app.use('/api', api)
 
+app.use('/api', api)
 app.listen(port, () => console.log(`App listening on port ${port}!`))
