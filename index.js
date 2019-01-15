@@ -34,9 +34,11 @@ app.use(express.static(path.join(__dirname, 'public')))
 const port = 8001
 
 app.get('/', (req, res) => {
-	res.redirect('/app.html');
-    // res.json({ message: 'Hello world' })
+	// res.redirect('/app.html');
+    // res.send('Hello world!')
+    res.json({ message: 'Hello world' })
 })
+
 
 app.post('/', (req, res) => {
     res.json(req.body)

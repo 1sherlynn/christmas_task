@@ -14,7 +14,7 @@ router.use(function timeLog(req, res, next) {
 
 // define the home page route
 router.get('/', function (req, res) {
-  res.send('Sub-route GET to /api')
+  res.json({message: 'Sub-route GET to /api'})
 })
 // define the about route
 router.post('/', function (req, res) {
@@ -76,8 +76,7 @@ router.route('/books/:id')
     BookModel.find({ _id: req.params.id })
     .then(book => { 
     	res.send(book)
-    	console.log(book)
-
+      console.log(`Get a book with id ${req.params.id}`,book)
     	}).catch(err => { 
     		res.send(err)
     		console.error(err) 
@@ -93,7 +92,7 @@ router.route('/books/:id')
     	},
     	{ new: true, runValidators: true })  // return updated entry and validate before update 
   	.then(book => { 
-  		console.log(book) 
+  		console.log(`Edit a book with id ${req.params.id}`)
   		res.send(book)
   	})
   	.catch(err => { 
@@ -108,6 +107,7 @@ router.route('/books/:id')
 	  })
 	  .then(response => {
 	  	res.send(response)
+      console.log(`Delete a book with id ${req.params.id}`)
 	    console.log(response)
 	  })
 	  .catch(err => {
