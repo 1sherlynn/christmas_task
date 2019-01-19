@@ -1,4 +1,4 @@
-$primary: purple;
+$primary: #353839;
 $secondary: yellow;
 $success: green; 
 $info: lightblue;
@@ -10,5 +10,9 @@ $danger: red;
 $badass: #bada55;
 body { 
   margin: 0; 
-  background-color: $badass; 
+  background-color: $info; 
+  background-image: url("/images/books/books2.jpg");
+  background-repeat: round;
+  background-size: auto;
+  background-size: contain;
 }

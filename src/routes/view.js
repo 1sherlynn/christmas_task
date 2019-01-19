@@ -4,6 +4,7 @@ var moment = require('moment');
 var q2m = require('query-to-mongo')
 let BookModel = require('../../src/model/book')
 
+
 // middleware that is specific to this router
 router.use(function timeLog(req, res, next) {
   console.log('Time: ', moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")) // current timestamp
@@ -32,7 +33,10 @@ router.route('/')
 		  	.sort(query.options.sort)
 		  	.limit(query.options.limit)
 		  	.skip(query.options.skip)
-	  	.then(books => res.send(books))
+	  	.then(books => 
+        res.render('index', {"books": books})
+        // res.send({books: books})
+        )
 	  	.catch(err => {
 	  		res.send(err)
 	  		console.log(err)
@@ -57,7 +61,8 @@ router.route('/:id')
   .get(function (req, res) {
     BookModel.find({ _id: req.params.id })
     .then(book => { 
-    	res.send(book)
+    	// res.send(book)
+      res.render('book', {"book": book})
       console.log(`Get a book with id ${req.params.id}`,book)
     	}).catch(err => { 
     		res.send(err)

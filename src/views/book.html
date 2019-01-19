@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Coding Task</title>
+	<link rel="stylesheet" href="stylesheets/style.css">
+</head>
+<body>
+	<div class="container mt-5 mb-5">
+		<h1>Listing of a single book</h1>
+		<p>Mustache templating language + mustache express</p>
+		<div class="text-primary">
+			<div class="row">
+				<div class="col-md-3"><p><h3>_id</b></h3></div>
+				<div class="col-md-3"><p><h3>Title</b></h3></div>
+				<div class="col-md-3"><p><h3>Author</b></h3></div>
+				<div class="col-md-3"><p><h3>Year</b></h3></div>
+			</div>
+			<div class="row">
+				{{#book}}
+				<div class="col-md-3"><p>{{_id}}</p></div>
+				<div class="col-md-3"><p>{{title}}</p></div>
+				<div class="col-md-3"><p>{{author}}</p></div>
+				<div class="col-md-3"><p>{{year}}</p></div>
+				{{/book}}
+			</div>
+			<a href="http://google.com" target="_blank" class="btn btn-primary">Mustache Manual</a>
+			<a href="http://google.com" target="_blank" class="btn btn-primary">Mustache-Express</a>
+			
+		</div>
+	</div>
+	
+</body>
+</html>
+

@@ -5,6 +5,14 @@ const app = express()
 var api = require('./src/routes/api')
 var view = require('./src/routes/view')
 
+var mustacheExpress = require('mustache-express');
+
+// Register '.mustache' extension with The Mustache Express
+app.engine('html', mustacheExpress());
+
+app.set('view engine', 'html');
+app.set('views', __dirname + '/src/views');
+
 var mongoose = require('mongoose');
 var db_url = 'mongodb://localhost:27017/books';
 
@@ -17,6 +25,8 @@ db.on('error', console.error.bind(console, 'MongoDB connection error: '));
 db.once('open', function() {
     console.log("Successfully connected to Mongo Server.");
 });
+
+
 
 app.use(sassMiddleware({
     /* Options */
