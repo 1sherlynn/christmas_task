@@ -2,7 +2,8 @@ const express = require('express')
 var sassMiddleware = require('node-sass-middleware');
 var path = require('path');
 const app = express()
-var api = require('./api')
+var api = require('./src/routes/api')
+var view = require('./src/routes/view')
 
 var mongoose = require('mongoose');
 var db_url = 'mongodb://localhost:27017/books';
@@ -47,4 +48,5 @@ app.post('/', (req, res) => {
 
 
 app.use('/api', api)
+app.use('/view', view)
 app.listen(port, () => console.log(`App listening on port ${port}!`))
