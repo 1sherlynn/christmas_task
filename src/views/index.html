@@ -18,10 +18,10 @@
 			</div>
 			<div class="row">
 				{{#books}}
-				<div class="col-md-3"><p>{{_id}}</p></div>
-				<div class="col-md-3"><p>{{title}}</p></div>
-				<div class="col-md-3"><p>{{author}}</p></div>
-				<div class="col-md-3"><p>{{year}}</p></div>
+				<div class="col-md-3"><p><a href="http://localhost:8001/view/{{_id}}">{{_id}}</a></p></div>
+				<div class="col-md-3"><p><a href="http://localhost:8001/view/{{_id}}">{{title}}</a></p></div>
+				<div class="col-md-3"><p><a href="http://localhost:8001/view/{{_id}}">{{author}}</a></p></div>
+				<div class="col-md-3"><p><a href="http://localhost:8001/view/{{_id}}">{{year}}</a></p></div>
 				{{/books}}
 			</div>
 			<a href="http://google.com" target="_blank" class="btn btn-primary">Mustache Manual</a>
