@@ -34,9 +34,12 @@ app.use(sassMiddleware({
     dest: __dirname + '/public/css',
     indentedSyntax : false,
     debug: true,
-    outputStyle: 'compressed',
+    force: true,
+    sourceMap: true,
+    outputStyle: 'compressed', 
     prefix:  '/stylesheets'  // Where prefix is at <link rel="stylesheets" href="stylesheets/style.css"/>
 }));
+
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))

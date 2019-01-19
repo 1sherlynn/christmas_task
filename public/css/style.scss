@@ -1,0 +1,18 @@
+$primary: #353839;
+$secondary: yellow;
+$success: green; 
+$info: lightblue;
+$warning: orange;
+$danger: red;
+
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+$badass: #bada55;
+body { 
+  margin: 0; 
+  background-color: $info; 
+  background-image: url("/images/books/books2.jpg");
+  background-repeat: round;
+  background-size: auto;
+  background-size: contain;
+}
