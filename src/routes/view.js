@@ -5,6 +5,7 @@ var q2m = require('query-to-mongo')
 let BookModel = require('../../src/model/book')
 
 
+
 // middleware that is specific to this router
 router.use(function timeLog(req, res, next) {
   console.log('Time: ', moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")) // current timestamp
@@ -13,6 +14,10 @@ router.use(function timeLog(req, res, next) {
   next()
 })
 
+router.get('/add', function (req, res) {
+  // res.json({message: 'Sub-route GET to /api'})
+  res.render('add_book', {title: req.body.title, author: req.body.author, year: req.body.year})
+})
 
 router.route('/')
   .get(function (req, res) {
@@ -36,21 +41,23 @@ router.route('/')
 	  	.then(books => 
         res.render('index', {"books": books})
         // res.send({books: books})
+
+        // res.render('hello', {"name": "Sherlynn"})
+        
         )
 	  	.catch(err => {
 	  		res.send(err)
 	  		console.log(err)
 	  	})
   	}
-
-
   })
   .post(function (req, res) {
     let book = new BookModel({ title: req.body.title, author: req.body.author, year: req.body.year })
 	book.save()
 	.then(book => { 
-		res.send(book)
+		// res.send(book)
 		console.log(book) 
+    res.redirect('/view');
 	}).catch(err => { 
 		res.send(err)
 		console.error(err) 
@@ -94,7 +101,7 @@ router.route('/:id')
 	  })
 	  .then(response => {
 	  	res.send(response)
-      console.log(`Delete a book with id ${req.params.id}`)
+      console.log(`Delete a book witth id ${req.params.id}`)
 	    console.log(response)
 	  })
 	  .catch(err => {
@@ -102,6 +109,7 @@ router.route('/:id')
 	    console.error(err)
 	  })
   })
+
 
 
 module.exports = router

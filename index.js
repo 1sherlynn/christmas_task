@@ -4,8 +4,17 @@ var path = require('path');
 const app = express()
 var api = require('./src/routes/api')
 var view = require('./src/routes/view')
+const bodyParser = require('body-parser');
 
 var mustacheExpress = require('mustache-express');
+
+app.use(bodyParser.json()) 
+app.use(bodyParser.urlencoded({ extended: true }));
+
+
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(express.static(path.join(__dirname, 'public')))
 
 // Register '.mustache' extension with The Mustache Express
 app.engine('html', mustacheExpress());
@@ -40,10 +49,6 @@ app.use(sassMiddleware({
     prefix:  '/stylesheets'  // Where prefix is at <link rel="stylesheets" href="stylesheets/style.css"/>
 }));
 
-
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use(express.static(path.join(__dirname, 'public')))
 
 const port = 8001
 

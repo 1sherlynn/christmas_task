@@ -4,6 +4,7 @@ $success: green;
 $info: lightblue;
 $warning: orange;
 $danger: red;
+$light: #d3d3d3;
 
 @import "../../node_modules/bootstrap/scss/bootstrap";
 
@@ -12,7 +13,8 @@ body {
   margin: 0; 
   background-color: $primary; 
   background-image: url("/images/books/books2.jpg");
-  background-repeat: round;
+  // background-repeat: round;
+  background-repeat: no-repeat;
   background-size: auto;
-  background-size: contain;
+  background-size: cover;
 }
