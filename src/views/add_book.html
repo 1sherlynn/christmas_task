@@ -16,25 +16,31 @@
 		    <input type="text" class="form-control" name="title" placeholder="Enter title">
 		{{!     <small id="emailHelp" class="form-text text-muted">Title is required.</small> }}
 		  </div>
+		  {{#titleError }}
 			{{#errors }}
 				<p class="alert alert-danger">{{ msg }}</p>
 			{{/errors}}
+		  {{/titleError }}
 
 		  <div class="form-group">
 		    <label for="author">Author</label>
 		    <input type="text" class="form-control" name="author" placeholder="Enter author">
 		  </div>
+		   {{#authorError }}
 		  	{{#errors }}
 				<p class="alert alert-danger">{{ msg }}</p>
 			{{/errors}}
+		   {{/authorError }}
 
 		  <div class="form-group">
 		    <label for="author">Year</label>
 		    <input type="text" class="form-control" name="year" placeholder="Enter year">
 		  </div>
+		  {{#yearError }}
 		  	{{#errors }}
 				<p class="alert alert-danger">{{ msg }}</p>
 			{{/errors}}
+		  {{/yearError }}
 
 		  <div class="mt-5">
 		  	<button type="submit" class="btn btn-primary mr-2">Submit</button>	

@@ -53,32 +53,43 @@ router.route('/')
   	}
   })
   .post(function (req, res) {
-    let book = new BookModel({ title: req.body.title, author: req.body.author, year: req.body.year })
-	book.save()
-	.then(book => { 
+     let book = new BookModel({ title: req.body.title, author: req.body.author, year: req.body.year })
+     let title = req.body.title;
+     let author = req.body.author;
+     let year = req.body.year;
 
-   let title = req.body.title;
-   let author = req.body.author;
-   let year = req.body.year;
-
-   req.checkBody('title', 'Title is required').notEmpty();
-
+     req.checkBody('title', 'Title is required').notEmpty();
    var errors = req.validationErrors();
+   var titleError = false
+   var authorError = false
+   var yearError = false
    if(errors){
       req.session.errors = errors;
-      console.log('erros obj', errors)
+      errors.map(error => {
+        if (error.param === 'title') {
+          titleError = true
+        } 
+        if (error.param === 'author') {
+          authorError = true
+        } 
+        if (error.param === 'year') {
+          yearError = true
+        }
+      })
       req.session.success = false;
-      res.redirect('/view/add');
+      res.render('add_book', {success: req.session.success, errors: req.session.errors, titleError: titleError, authorError: authorError, yearError: yearError});
    }
    else{
       req.session.success = true;
       res.redirect('/view');
    }
+
+	book.save()
+	.then(book => { 
+
 		// res.send(book)
 		console.log(book) 
-
     res.redirect('/view');
-
 	}).catch(err => { 
 		res.send(err)
 		console.error(err) 
