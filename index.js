@@ -1,15 +1,21 @@
 const express = require('express')
+const expressValidator = require('express-validator');
 var sassMiddleware = require('node-sass-middleware');
 var path = require('path');
 const app = express()
 var api = require('./src/routes/api')
 var view = require('./src/routes/view')
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
 
 var mustacheExpress = require('mustache-express');
 
 app.use(bodyParser.json()) 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(expressValidator());
+app.use(cookieParser());
+app.use(session({secret: 'sherlynn', saveUninitialized: false, resave: false}));
 
 
 app.use(express.json())

@@ -16,7 +16,8 @@ router.use(function timeLog(req, res, next) {
 
 router.get('/add', function (req, res) {
   // res.json({message: 'Sub-route GET to /api'})
-  res.render('add_book', {title: req.body.title, author: req.body.author, year: req.body.year})
+  res.render('add_book', { success: req.session.success, errors: req.session.errors })
+  req.session.errors = null;
 })
 
 router.route('/')
@@ -55,9 +56,29 @@ router.route('/')
     let book = new BookModel({ title: req.body.title, author: req.body.author, year: req.body.year })
 	book.save()
 	.then(book => { 
+
+   let title = req.body.title;
+   let author = req.body.author;
+   let year = req.body.year;
+
+   req.checkBody('title', 'Title is required').notEmpty();
+
+   var errors = req.validationErrors();
+   if(errors){
+      req.session.errors = errors;
+      console.log('erros obj', errors)
+      req.session.success = false;
+      res.redirect('/view/add');
+   }
+   else{
+      req.session.success = true;
+      res.redirect('/view');
+   }
 		// res.send(book)
 		console.log(book) 
+
     res.redirect('/view');
+
 	}).catch(err => { 
 		res.send(err)
 		console.error(err) 
