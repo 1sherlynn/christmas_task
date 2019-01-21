@@ -42,7 +42,6 @@ router.route('/')
 	  	.then(books => 
         res.render('index', {"books": books})
         // res.send({books: books})
-
         // res.render('hello', {"name": "Sherlynn"})
         
         )
@@ -57,8 +56,9 @@ router.route('/')
      let title = req.body.title;
      let author = req.body.author;
      let year = req.body.year;
+     console.log('author', author)
 
-     req.checkBody('title', 'Title is required').notEmpty();
+  req.checkBody('title', 'Title is required').notEmpty();
    var errors = req.validationErrors();
    var titleError = false
    var authorError = false
@@ -76,8 +76,18 @@ router.route('/')
           yearError = true
         }
       })
+      var data = {
+        success: req.session.success,
+        errors: req.session.errors,
+        titleError: titleError,
+        authorError: authorError,
+        yearError: yearError,
+        initialTitle: title,
+        initialAuthor: author,
+        initialYear: year
+      }
       req.session.success = false;
-      res.render('add_book', {success: req.session.success, errors: req.session.errors, titleError: titleError, authorError: authorError, yearError: yearError});
+      res.render('add_book', data);
    }
    else{
       req.session.success = true;
@@ -89,7 +99,6 @@ router.route('/')
 
 		// res.send(book)
 		console.log(book) 
-    res.redirect('/view');
 	}).catch(err => { 
 		res.send(err)
 		console.error(err) 
