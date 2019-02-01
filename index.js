@@ -5,6 +5,7 @@ var path = require('path');
 const app = express()
 var api = require('./src/routes/api')
 var view = require('./src/routes/view')
+var secure = require('./src/routes/secure')
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
@@ -73,4 +74,5 @@ app.post('/', (req, res) => {
 
 app.use('/api', api)
 app.use('/view', view)
+app.use('/secure', secure)
 app.listen(port, () => console.log(`App listening on port ${port}!`))
