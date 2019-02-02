@@ -34,22 +34,10 @@ router.post('/login', function (req, res) {
     if (req.body.email && req.body.password) {
       if (email === req.body.email && password === req.body.password) {
         res.json({email: req.body.email, password: req.body.password, token: "this is your token"})
-      } else if (email === req.body.email && password !== req.body.password) {
+      } else if (!(email === req.body.email && password === req.body.password)) {
         res.statusCode = 401
-        res.json({email: req.body.email, password: "Password is incorrect", statusCode: res.statusCode})
-      } else if (email !== req.body.email && password === req.body.password) {
-        res.statusCode = 401
-        res.json({email: "Email is incorrect", password: req.body.password, statusCode: res.statusCode})
-      } else {
-        res.statusCode = 401
-        res.json({email: "Email is incorrect", password: "Password is incorrect", statusCode: res.statusCode})
-      }
-    } else if (req.body.email && req.body.password === undefined) {
-        res.statusCode = 401
-        res.json({email: req.body.email, password: "Password empty. Please enter password", statusCode: res.statusCode})
-    } else if (req.body.email === undefined && req.body.password) {
-        res.statusCode = 401
-        res.json({email: req.body.email, password: "Password empty. Please enter password", statusCode: res.statusCode})     
+        res.json({error: "Invalid email or password!", statusCode: res.statusCode})
+      }     
     } else {
         res.statusCode = 401
         res.json({error: "Please enter both email and password fields.", statusCode: res.statusCode })
