@@ -23,8 +23,38 @@ router.get('/', function (req, res) {
 })
 
 
-router.post('/', function (req, res) {
-  res.send('Secure route')
+router.post('/login', function (req, res) {
+  users = {
+    user1: { email: "admin@protege.sg", password: "Test1234", role: "admin" },
+    user2: { email: "user@protege.sg", password: "Ab12345", role: "user"}
+  }
+  Object.keys(users).map(key => {
+    let email = users[key].email
+    let password = users[key].password
+    if (req.body.email && req.body.password) {
+      if (email === req.body.email && password === req.body.password) {
+        res.json({email: req.body.email, password: req.body.password, token: "this is your token"})
+      } else if (email === req.body.email && password !== req.body.password) {
+        res.statusCode = 401
+        res.json({email: req.body.email, password: "Password is incorrect", statusCode: res.statusCode})
+      } else if (email !== req.body.email && password === req.body.password) {
+        res.statusCode = 401
+        res.json({email: "Email is incorrect", password: req.body.password, statusCode: res.statusCode})
+      } else {
+        res.statusCode = 401
+        res.json({email: "Email is incorrect", password: "Password is incorrect", statusCode: res.statusCode})
+      }
+    } else if (req.body.email && req.body.password === undefined) {
+        res.statusCode = 401
+        res.json({email: req.body.email, password: "Password empty. Please enter password", statusCode: res.statusCode})
+    } else if (req.body.email === undefined && req.body.password) {
+        res.statusCode = 401
+        res.json({email: req.body.email, password: "Password empty. Please enter password", statusCode: res.statusCode})     
+    } else {
+        res.statusCode = 401
+        res.json({error: "Please enter both email and password fields.", statusCode: res.statusCode })
+    }
+  })
 })
 
 
