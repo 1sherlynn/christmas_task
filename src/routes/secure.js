@@ -2,6 +2,8 @@ var express = require('express')
 var router = express.Router()
 var moment = require('moment');
 var q2m = require('query-to-mongo')
+var jwt = require('jsonwebtoken');
+var users = require('../model/userData');
 
 // middleware that is specific to this router
 router.use(function timeLog(req, res, next) {
@@ -22,27 +24,22 @@ router.get('/', function (req, res) {
   }
 })
 
-
-router.post('/login', function (req, res) {
-  users = {
-    user1: { email: "admin@protege.sg", password: "Test1234", role: "admin" },
-    user2: { email: "user@protege.sg", password: "Ab12345", role: "user"}
-  }
-  Object.keys(users).map(key => {
-    let email = users[key].email
-    let password = users[key].password
-    if (req.body.email && req.body.password) {
-      if (email === req.body.email && password === req.body.password) {
-        res.json({email: req.body.email, password: req.body.password, token: "this is your token"})
-      } else if (!(email === req.body.email && password === req.body.password)) {
-        res.statusCode = 401
-        res.json({error: "Invalid email or password!", statusCode: res.statusCode})
-      }     
+router.post('/login', (req, res, next) => {
+  let userData = {email: req.body.email, role: req.body.role }
+  if (users[req.body.email] ) {
+    if (users[req.body.email].password === req.body.password) {
+      jwt.sign({ data: userData }, 'OURSECRET', { expiresIn: 1200 },(err, token) => {
+          if(err) { console.log(err) }    
+          res.send({email: req.body.email, token: token, statusCode:res.statusCode });
+      });
     } else {
-        res.statusCode = 401
-        res.json({error: "Please enter both email and password fields.", statusCode: res.statusCode })
+      res.statusCode = 403
+      res.send({error: "Wrong password", statusCode:res.statusCode});
     }
-  })
+  } else  {
+    res.statusCode = 403
+    res.send({error: "Invalid email", statusCode:res.statusCode });
+  } 
 })
 
 
