@@ -13,22 +13,61 @@ router.use(function timeLog(req, res, next) {
   next()
 })
 
-router.get('/', function (req, res) {
-  const authHeader = req.get('Authorization');
-  if (authHeader === undefined) {
-    res.statusCode = 403
-    res.json({ error: "No credentials sent!", statusCode:res.statusCode })
-  } else {
-    res.statusCode = 200
-    res.json({success: true, data: authHeader, statusCode:res.statusCode , headers:req.headers})
-  }
-})
+// router.get('/', function (req, res) {
+//   const authHeader = req.get('Authorization');
+//   if (authHeader === undefined) {
+//     res.statusCode = 403
+//     res.json({ error: "No credentials sent!", statusCode:res.statusCode })
+//   } else {
+//     res.statusCode = 200
+//     res.json({success: true, data: authHeader, statusCode:res.statusCode , headers:req.headers})
+//   }
+// })
+
+
+//Check to make sure header is not undefined, if so, return Forbidden (403)
+let checkToken = (req, res, next) => {
+    const header = req.headers['authorization'];
+
+    if(typeof header !== 'undefined') {
+        const bearer = header.split(' ');
+        const token = bearer[1];
+
+        req.token = token;
+        next();
+    } else {
+        //If header is undefined return Forbidden (403)
+      res.statusCode = 403
+      res.json({ error: "No credentials sent! Authorization header undefined.", statusCode:res.statusCode })
+    }
+}
+
+    //This is a protected route 
+    router.get('/', checkToken, (req, res) => {
+        //verify the JWT token generated for the user
+        jwt.verify(req.token, 'OURSECRET', (err, userData) => {
+            if(err){
+                //If error send Forbidden (403)
+                console.log('ERROR: Could not connect to the protected route');
+                res.statusCode = 403
+                res.send({error: 'Credentials invalid!', statusCode: res.statusCode});
+            } else {
+                //If token is successfully verified, we can send the autorized data 
+                res.json({
+                    message: 'Successful log in',
+                    userData, 
+                    data: req.headers['authorization']
+                });
+                console.log('SUCCESS: Connected to protected route');
+            }
+        })
+    })
 
 router.post('/login', (req, res, next) => {
   let userData = {email: req.body.email, role: req.body.role }
   if (users[req.body.email] ) {
     if (users[req.body.email].password === req.body.password) {
-      jwt.sign({ data: userData }, 'OURSECRET', { expiresIn: 1200 },(err, token) => {
+      jwt.sign({ data: userData }, 'OURSECRET', { expiresIn: 120 },(err, token) => {
           if(err) { console.log(err) }    
           res.send({email: req.body.email, token: token, statusCode:res.statusCode });
       });
@@ -43,14 +82,6 @@ router.post('/login', (req, res, next) => {
 })
 
 
-router.route('/login')
-  .get(function (req, res) {
-    res.json({message: 'Secure/login'})
-
-  })
-  .post(function (req, res) {
-    res.send('Secure/login')
-  })
 
 
 
