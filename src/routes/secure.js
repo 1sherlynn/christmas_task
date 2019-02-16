@@ -31,10 +31,14 @@ let checkToken = (req, res, next) => {
 
     if(typeof header !== 'undefined') {
         const bearer = header.split(' ');
+        if (bearer[0].toLowerCase() !== 'bearer' ) {
+          res.json({ error: "Bearer string not defined.", statusCode:res.statusCode })
+        } else {
         const token = bearer[1];
 
         req.token = token;
         next();
+        }
     } else {
         //If header is undefined return Forbidden (403)
       res.statusCode = 403
