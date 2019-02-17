@@ -7,10 +7,12 @@ let UserModel = require('../../src/model/user')
 
 router.route('/')
   .get(function (req, res) {
-    res.json({message: 'get'})
+    UserModel.find({}).then(users => 
+      res.json({users: users})
+    )
   })
   .post(function (req, res) {
-    let user = new userModel({ 
+    let user = new UserModel({ 
       email: req.body.email, 
       name: req.body.name
       })

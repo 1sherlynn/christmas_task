@@ -9,6 +9,7 @@ let userSchema = new mongoose.Schema({
     lowercase: true,
     trim: true,
     index: true,
+    // match: /\S+@\S+\.\S+/,
     validate: {
     validator: function(v) {
         return /\S+@\S+\.\S+/.test(v);
