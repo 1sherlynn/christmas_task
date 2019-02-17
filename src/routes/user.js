@@ -94,7 +94,17 @@ router.route('/session')
     }
     res.json({
       "message": message, 
-      "email": req.session.email,
+      "session": req.session
+    });
+  })
+
+router.route('/logout')
+  .get((req, res, next) => {
+    req.session.destroy(function(err){
+     // cannot access session here
+   });
+    res.json({
+      "message": 'Session destroyed',
       "session": req.session
     });
   })
