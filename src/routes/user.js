@@ -65,6 +65,7 @@ router.route('/signup')
         } 
         else { 
             if (user.validPassword(req.body.password)) { 
+                req.session.userId = user._id
                 req.session.name = user.name
                 req.session.email = user.email
                 return res.status(200).send({ 
