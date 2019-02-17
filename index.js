@@ -17,7 +17,13 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
 app.use(cookieParser());
-app.use(session({secret: 'sherlynn', saveUninitialized: false, resave: false}));
+app.use(session({
+    name: 'coding_task', // The name of the cookie
+    secret: 'sherlynn', // The secret is required, and is used for signing cookies
+    saveUninitialized: false, // Force save of session for each request.
+    resave: false, // Save a session that is new, but has not been modified
+    cookie: { maxAge: 10000 }
+}));
 
 
 app.use(express.json())
@@ -61,10 +67,22 @@ app.use(sassMiddleware({
 const port = 8001
 
 app.get('/', (req, res) => {
-	res.redirect('/app.html');
+        // simple count for the session
+    if (!req.session.count) {
+        req.session.count = 0;
+ 
+
+    }
+    req.session.count += 1;
+ 
+    // respond with the session object
+    res.json(req.session);
+
+	// res.redirect('/app.html');
     // res.send('Hello world!')
     // res.json({ message: 'Hello world' })
 })
+
 
 
 app.post('/', (req, res) => {

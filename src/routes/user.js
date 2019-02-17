@@ -65,9 +65,12 @@ router.route('/signup')
         } 
         else { 
             if (user.validPassword(req.body.password)) { 
+                req.session.name = user.name
+                req.session.email = user.email
                 return res.status(200).send({ 
                     message : "User Logged In", 
-                    status: res.statusCode
+                    status: res.statusCode,
+                    session: req.session
                 }) 
             } 
             else { 
@@ -79,6 +82,21 @@ router.route('/signup')
         } 
     }); 
   }); 
+
+router.route('/session')
+  .get((req, res, next) => {
+    let message = ''
+    if (req.session.email) {
+      message = 'Logged in'
+    } else {
+      message = 'Logged out'
+    }
+    res.json({
+      "message": message, 
+      "email": req.session.email,
+      "session": req.session
+    });
+  })
   
 
 router.route('/:id')
