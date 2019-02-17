@@ -1,7 +1,8 @@
 let mongoose = require('mongoose')
-let validator = require('validator')
+var uniqueValidator = require('mongoose-unique-validator');
+const crypto = require('crypto');
 
-let userSchema = new mongoose.Schema({
+let UserSchema = new mongoose.Schema({
   email: {
   	type: String,
   	required: true,
@@ -25,7 +26,19 @@ let userSchema = new mongoose.Schema({
     salt: String
 })
 
-module.exports = mongoose.model('User', userSchema);
+UserSchema.methods.setPassword = function(password) { 
+    this.salt = crypto.randomBytes(16).toString('hex'); 
+    this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 512, `sha512`).toString(`hex`); 
+    console.log('SALT: ', this.salt, ' |  HASH: ', this.hash)
+}; 
+
+UserSchema.methods.validPassword = function(password) { 
+    var hash = crypto.pbkdf2Sync(password, this.salt, 1000, 512, `sha512`).toString(`hex`); 
+    return this.hash === hash; 
+}; 
+
+module.exports = mongoose.model('User', UserSchema);
+UserSchema.plugin(uniqueValidator);
 
 
     // match: /\S+@\S+\.\S+/,

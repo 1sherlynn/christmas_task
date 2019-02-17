@@ -76,5 +76,5 @@ app.post('/', (req, res) => {
 app.use('/api', api)
 app.use('/view', view)
 app.use('/secure', secure)
-app.use('/auth', user)
+app.use('/users', user)
 app.listen(port, () => console.log(`App listening on port ${port}!`))
