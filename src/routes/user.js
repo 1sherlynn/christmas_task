@@ -25,7 +25,7 @@ router.route('/') // path: /users
   })
 
 
-router.route('/signup')
+router.route('/signup') // path: /users/signup
   .get((req, res, next) => {
     res.render('user_signup');
   })
@@ -38,19 +38,19 @@ router.route('/signup')
       // save newUser object to database 
       newUser.save((err, User) => { 
           if (err) { 
-              return res.status(400).send({ 
+              return res.status(401).send({ 
                   err: err
               }); 
           } 
           else { 
-              return res.status(201).send({ 
+              return res.status(200).send({ 
                   message : "User added succesfully."
               }); 
           } 
       }); 
   }); 
 
-  router.route('/login')
+  router.route('/login') // path: /users/login
   .get((req, res, next) => {
     res.render('user_login');
   })
@@ -84,7 +84,20 @@ router.route('/signup')
     }); 
   }); 
 
-router.route('/session')
+let checkAuthorization = (req, res, next) => {
+    let message = ''
+    if (req.session.email) {
+      req.user = user
+      next();
+    } else {
+        return res.status(401).send({ 
+            message : "Not Authorized",
+            status: res.statusCode
+        }); 
+    }
+}
+
+router.route('/session') // path: /users/ssession
   .get((req, res, next) => {
     let message = ''
     if (req.session.email) {
@@ -110,7 +123,7 @@ router.route('/logout')
   })
   
 
-router.route('/:id')
+router.route('/:id') // path: /users/:id
   .get((req, res) => {
     UserModel.find({ _id: req.params.id })
     .then(user => { 
