@@ -5,8 +5,21 @@ var q2m = require('query-to-mongo')
 let UserModel = require('../../src/model/user')
 
 
+let checkAuthorization = (req, res, next) => {
+    if (req.session.userId) {
+      const user=req.session.userId
+      req.user=user
+      next();
+    } else {
+        return res.status(401).send({ 
+            message : "Not Authorized",
+            status: res.statusCode
+        }); 
+    }
+}
+
 router.route('/') // path: /users
-  .get((req, res) => {
+  .get(checkAuthorization, (req, res) => {
     UserModel.find({}).then(users => 
       res.json({users: users})
     )
@@ -84,18 +97,6 @@ router.route('/signup') // path: /users/signup
     }); 
   }); 
 
-let checkAuthorization = (req, res, next) => {
-    let message = ''
-    if (req.session.email) {
-      req.user = user
-      next();
-    } else {
-        return res.status(401).send({ 
-            message : "Not Authorized",
-            status: res.statusCode
-        }); 
-    }
-}
 
 router.route('/session') // path: /users/ssession
   .get((req, res, next) => {
