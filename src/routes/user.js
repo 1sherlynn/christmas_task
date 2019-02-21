@@ -7,8 +7,10 @@ let UserModel = require('../../src/model/user')
 
 let checkAuthorization = (req, res, next) => {
     if (req.session.userId) {
-      const user=req.session.userId
+      UserModel.findOne({ _id: req.session.userId}, function(err, user) { 
       req.user=user
+      console.log('checkAuthorization middleware - user', user)
+    })
       next();
     } else {
         return res.status(401).send({ 

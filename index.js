@@ -22,7 +22,7 @@ app.use(session({
     secret: 'sherlynn', // The secret is required, and is used for signing cookies
     saveUninitialized: false, // Force save of session for each request.
     resave: false, // Save a session that is new, but has not been modified
-    cookie: { maxAge: 60000*30 }
+    cookie: { maxAge: 300000 }
 }));
 
 
