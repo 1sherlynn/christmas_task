@@ -7,11 +7,11 @@ let UserModel = require('../../src/model/user')
 
 let checkAuthorization = (req, res, next) => {
     if (req.session.userId) {
-      UserModel.findOne({ _id: req.session.userId}, function(err, user) { 
-      req.user=user
-      console.log('checkAuthorization middleware - user', user)
-    })
-      next();
+        UserModel.findOne({ _id: req.session.userId}, function(err, user) { 
+        req.user=user
+        console.log('checkAuthorization middleware - user', req.user)
+        next(); 
+      })
     } else {
         return res.status(401).send({ 
             message : "Not Authorized",
@@ -20,24 +20,12 @@ let checkAuthorization = (req, res, next) => {
     }
 }
 
-router.route('/') // path: /users
-  .get(checkAuthorization, (req, res) => {
-    UserModel.find({}).then(users => 
-      res.json({users: users})
+router.get('/', checkAuthorization, function (req, res) {
+      UserModel.find({}).then(users => 
+      res.json({reqUser: req.user, allUsers: users})
     )
-  })
-  .post((req, res) => {
-    let user = new UserModel({ 
-      email: req.body.email, 
-      name: req.body.name
-      })
-  user.save()
-  .then(user => { 
-    res.send(user)
-  }).catch(err => { 
-    res.send(err)
-    })
-  })
+   console.log('checkAuthorization print from next route', req.user)
+})
 
 
 router.route('/signup') // path: /users/signup

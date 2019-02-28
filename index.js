@@ -10,6 +10,8 @@ var user = require('./src/routes/user')
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
+
 
 var mustacheExpress = require('mustache-express');
 
@@ -17,12 +19,22 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
 app.use(cookieParser());
+
+var mongoose = require('mongoose');
+var db_url = 'mongodb://localhost:27017/books';
+
+mongoose.connect(db_url);
+mongoose.Promise = global.Promise;
+var db = mongoose.connection;
+
+
 app.use(session({
     name: 'coding_task', // The name of the cookie
     secret: 'sherlynn', // The secret is required, and is used for signing cookies
     saveUninitialized: false, // Force save of session for each request.
     resave: false, // Save a session that is new, but has not been modified
-    cookie: { maxAge: 300000 }
+    cookie: { maxAge: 300000 },
+    store: new MongoStore({ mongooseConnection: db })
 }));
 
 
@@ -36,12 +48,6 @@ app.engine('html', mustacheExpress());
 app.set('view engine', 'html');
 app.set('views', __dirname + '/src/views');
 
-var mongoose = require('mongoose');
-var db_url = 'mongodb://localhost:27017/books';
-
-mongoose.connect(db_url);
-mongoose.Promise = global.Promise;
-var db = mongoose.connection;
 
 
 db.on('error', console.error.bind(console, 'MongoDB connection error: '));
