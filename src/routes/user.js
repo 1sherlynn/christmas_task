@@ -11,20 +11,22 @@ function hasAccessCheck(accessLevel) {
     if (req.session.user) {
       UserModel.findOne({ _id: req.session.userId}, function(err, user) { 
         if (user.hasAccess(accessLevel)) {
+            req.user=user
             return next(); 
         } else {
-          return res.json({
-            success: false,
-            error: 'Unauthorized access level'
+          return res.status(401).send({ 
+              success: false,
+              message : "Unauthorized access level",
+              status: res.statusCode
           })
-
         }
       })
     } else {
-     return res.json({
-      success: false,
-      error: 'Unauthorized - not logged in'
-    })
+          return res.status(401).send({ 
+              success: false,
+              message : "Unauthorized - not logged in ",
+              status: res.statusCode
+          })
 
     }
   }
