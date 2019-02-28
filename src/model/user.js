@@ -26,6 +26,16 @@ let UserSchema = new mongoose.Schema({
     salt: String
 })
 
+UserSchema.plugin(require('mongoose-role'), {
+  roles: ['public', 'user', 'admin'],
+  accessLevels: {
+    public: ['public', 'user', 'admin'],
+    user: ['user', 'admin'],
+    admin: ['admin']
+  }
+})
+
+
 UserSchema.methods.setPassword = function(password) { 
     this.salt = crypto.randomBytes(16).toString('hex'); 
     this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, `sha512`).toString(`hex`); 

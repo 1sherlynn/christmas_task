@@ -5,6 +5,58 @@ var q2m = require('query-to-mongo')
 let UserModel = require('../../src/model/user')
 
 
+
+function hasAccessCheck(accessLevel) {
+  return function(req, res, next) {
+    if (req.session.user) {
+      UserModel.findOne({ _id: req.session.userId}, function(err, user) { 
+        if (user.hasAccess(accessLevel)) {
+            return next(); 
+        } else {
+          return res.json({
+            success: false,
+            error: 'Unauthorized access level'
+          })
+
+        }
+      })
+    } else {
+     return res.json({
+      success: false,
+      error: 'Unauthorized - not logged in'
+    })
+
+    }
+  }
+}
+
+// ask Micha: req.session.user.hasAccess('user') why is this not possible?
+
+
+
+router.get('/access-user', 
+  hasAccessCheck('user'), // protection middleware
+  (req, res, next) => {
+    console.log('you have USER access!')
+    res.json({
+      secure: true,
+      data: 'user access granted'
+    })
+  }
+)
+
+router.get('/access-admin', 
+  hasAccessCheck('admin'), // protection middleware
+  (req, res, next) => {
+    console.log('you have ADMIN access!')
+    res.json({
+      secure: true,
+      data: 'admin access granted'
+    })
+  }
+)
+
+
 let checkAuthorization = (req, res, next) => {
     if (req.session.userId) {
         UserModel.findOne({ _id: req.session.userId}, function(err, user) { 
@@ -20,12 +72,15 @@ let checkAuthorization = (req, res, next) => {
     }
 }
 
+
+
 router.get('/', checkAuthorization, function (req, res) {
       UserModel.find({}).then(users => 
       res.json({reqUser: req.user, allUsers: users})
     )
    console.log('checkAuthorization print from next route', req.user)
 })
+
 
 
 router.route('/signup') // path: /users/signup
@@ -35,11 +90,12 @@ router.route('/signup') // path: /users/signup
   .post((req, res, next) => { 
       let newUser = new UserModel(); 
       newUser.name = req.body.name, 
-      newUser.email = req.body.email 
+      newUser.email = req.body.email,
+      newUser.role = req.body.role
       newUser.setPassword(req.body.password); // call setPassword function to hash password 
     
       // save newUser object to database 
-      newUser.save((err, User) => { 
+      newUser.save((err, user) => { 
           if (err) { 
               return res.status(401).send({ 
                   err: err
@@ -47,7 +103,8 @@ router.route('/signup') // path: /users/signup
           } 
           else { 
               return res.status(200).send({ 
-                  message : "User added succesfully."
+                  message : "User added succesfully.",
+                  role: user
               }); 
           } 
       }); 
@@ -71,10 +128,17 @@ router.route('/signup') // path: /users/signup
                 req.session.userId = user._id
                 req.session.name = user.name
                 req.session.email = user.email
+                req.session.user = user
+                req.session.accessUser = user.hasAccess('user'),
+                req.session.accessAdmin = user.hasAccess('admin')
+
                 return res.status(200).send({ 
                     message : "User Logged In", 
                     status: res.statusCode,
-                    session: req.session
+                    session: req.session,
+                    adminAccess: user.hasAccess('admin'),
+                    userAccess: user.hasAccess('user'),
+                    test: req.session.user.hasAccess('user')
                 }) 
             } 
             else { 
