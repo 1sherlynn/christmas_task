@@ -14,15 +14,17 @@ function hasAccessCheck(accessLevel) {
             req.user=user
             return next(); 
         } else {
-          return res.status(401).send({ 
-              success: false,
-              message : "Unauthorized access level",
-              status: res.statusCode
-          })
+            return req.flash('alert', 'Unauthorised access level. Only admin allowed.', '/users');
+
+          // return res.status(401).send({ 
+          //     success: false,
+          //     message : "Unauthorized access level",
+          //     status: res.statusCode
+          // })
         }
       })
     } else {
-      return req.flash('alert', 'you must enter your username and password to login', '/users/login');
+      return req.flash('alert', 'Not Authorised. You must enter your username and password to log in.', '/users/login');
           // return res.status(401).send({ 
           //     success: false,
           //     message : "Unauthorized - not logged in ",
@@ -48,7 +50,7 @@ router.get('/access-user',
   }
 )
 
-router.get('/access-admin', 
+router.get('/admin', 
   hasAccessCheck('admin'), // protection middleware
   (req, res, next) => {
     console.log('you have ADMIN access!')

@@ -8,9 +8,21 @@
 <body>
 	<div class="container mt-5 mb-5 p-5" style='background-color: white; opacity: 0.9'>
 		<h1>User Details</h1>
-		<div class="text-primary">
-		Display user info here after successful login
-		{{user}}
+		{{#flash}}
+		<div class="alert alert-warning alert-dismissible fade show" role="alert">
+		  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		    <span aria-hidden="true">&times;</span>
+		  </button>
+		  {{flash}}
+		</div>
+		{{/flash}}
+
+
+		<div class="text-primary mt-3">
+			<p><b>Id:</b> {{user.id}}</p>
+			<p><b>Name:</b> {{user.name}}</p>
+			<p><b>Email:</b> {{user.email}}</p>
+			<p><b>Role:</b> {{user.role}}</p>
 		</div>
 		<div class="mt-5">
 		  	<a href="http://localhost:8001/users/logout" class="btn btn-light">Logout</a>
