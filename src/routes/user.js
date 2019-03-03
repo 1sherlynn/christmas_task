@@ -54,10 +54,11 @@ router.get('/admin',
   hasAccessCheck('admin'), // protection middleware
   (req, res, next) => {
     console.log('you have ADMIN access!')
-    res.json({
-      secure: true,
-      data: 'admin access granted'
-    })
+    res.render('admin', {"user": req.user, "isAdmin": req.session.accessAdmin})
+    // res.json({
+    //   secure: true,
+    //   data: 'admin access granted'
+    // })
   }
 )
 
@@ -70,7 +71,7 @@ let checkAuthorization = (req, res, next) => {
         next(); 
       })
     } else {
-      return res.redirect('/users/login')
+      return req.flash('alert', 'Not Authorised. You must enter your username and password to log in.', '/users/login');
         // return res.status(401).send({ 
         //     message : "Not Authorized",
         //     status: res.statusCode
@@ -83,7 +84,7 @@ let checkAuthorization = (req, res, next) => {
 router.get('/', hasAccessCheck('user'),checkAuthorization, function (req, res) {
 
       UserModel.find({}).then(users => 
-      res.render('user_details', {"user": req.user})
+      res.render('user_details', {"user": req.user, "isAdmin": req.session.accessAdmin})
       // res.json({reqUser: req.user, allUsers: users})
     )
    console.log('checkAuthorization print from next route', req.user)
@@ -121,6 +122,9 @@ router.route('/signup') // path: /users/signup
 
   router.route('/login') // path: /users/login
   .get((req, res, next) => {
+    if (req.session.user) {
+      return res.redirect('/users')
+    }
     res.render('user_login');
   })
   .post((req, res, next) => { 
@@ -182,10 +186,11 @@ router.route('/logout')
     req.session.destroy(function(err){
      // cannot access session here
    });
-    res.json({
-      "message": 'Session destroyed',
-      "session": req.session
-    });
+    return res.redirect('/users/login')
+    // res.json({
+    //   "message": 'Session destroyed',
+    //   "session": req.session
+    // });
   })
   
 
