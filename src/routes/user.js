@@ -78,7 +78,8 @@ let checkAuthorization = (req, res, next) => {
 
 router.get('/', checkAuthorization, function (req, res) {
       UserModel.find({}).then(users => 
-      res.json({reqUser: req.user, allUsers: users})
+      res.render('user_details', {"user": req.user})
+      // res.json({reqUser: req.user, allUsers: users})
     )
    console.log('checkAuthorization print from next route', req.user)
 })
@@ -104,7 +105,8 @@ router.route('/signup') // path: /users/signup
               }); 
           } 
           else { 
-              return res.status(200).send({ 
+              return 
+              res.status(200).send({ 
                   message : "User added succesfully.",
                   role: user
               }); 
@@ -134,14 +136,16 @@ router.route('/signup') // path: /users/signup
                 req.session.accessUser = user.hasAccess('user'),
                 req.session.accessAdmin = user.hasAccess('admin')
 
-                return res.status(200).send({ 
-                    message : "User Logged In", 
-                    status: res.statusCode,
-                    session: req.session,
-                    adminAccess: user.hasAccess('admin'),
-                    userAccess: user.hasAccess('user'),
-                    test: req.session.user.hasAccess('user')
-                }) 
+                return res.redirect('/users')
+                  // res.render('user_edit', {"user": user[0]} )
+                // return res.status(200).send({ 
+                //     message : "User Logged In", 
+                //     status: res.statusCode,
+                //     session: req.session,
+                //     adminAccess: user.hasAccess('admin'),
+                //     userAccess: user.hasAccess('user'),
+                //     test: req.session.user.hasAccess('user')
+                // }) 
             } 
             else { 
                 return res.status(401).send({ 

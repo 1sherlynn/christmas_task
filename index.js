@@ -3,6 +3,7 @@ const expressValidator = require('express-validator');
 var sassMiddleware = require('node-sass-middleware');
 var path = require('path');
 const app = express()
+const flash = require('express-flash-notification');
 var api = require('./src/routes/api')
 var view = require('./src/routes/view')
 var secure = require('./src/routes/secure')
@@ -36,6 +37,7 @@ app.use(session({
     cookie: { maxAge: 300000 },
     store: new MongoStore({ mongooseConnection: db })
 }));
+app.use(flash(app));
 
 
 app.use(express.json())
