@@ -4,11 +4,25 @@
 	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<title>Login</title>
 	<link rel="stylesheet" href="/stylesheets/style.css">
+	<!-- jquery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<!-- bootstrap -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 	<div class="container mt-5 mb-5 p-5" style='background-color: white; opacity: 0.9'>
 		<h1>Login</h1>
 		<div class="text-primary">
+		{{#flash}}
+		<div class="alert alert-warning alert-dismissible fade show" role="alert">
+		  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		    <span aria-hidden="true">&times;</span>
+		  </button>
+		  {{flash}}
+		</div>
+		{{/flash}}
 
 		<form method="POST" action="/users/login">
 		  <div class="form-group">

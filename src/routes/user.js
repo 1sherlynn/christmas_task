@@ -22,11 +22,12 @@ function hasAccessCheck(accessLevel) {
         }
       })
     } else {
-          return res.status(401).send({ 
-              success: false,
-              message : "Unauthorized - not logged in ",
-              status: res.statusCode
-          })
+      return req.flash('alert', 'you must enter your username and password to login', '/users/login');
+          // return res.status(401).send({ 
+          //     success: false,
+          //     message : "Unauthorized - not logged in ",
+          //     status: res.statusCode
+          // })
 
     }
   }
@@ -67,16 +68,18 @@ let checkAuthorization = (req, res, next) => {
         next(); 
       })
     } else {
-        return res.status(401).send({ 
-            message : "Not Authorized",
-            status: res.statusCode
-        }); 
+      return res.redirect('/users/login')
+        // return res.status(401).send({ 
+        //     message : "Not Authorized",
+        //     status: res.statusCode
+        // }); 
     }
 }
 
 
 
-router.get('/', checkAuthorization, function (req, res) {
+router.get('/', hasAccessCheck('user'),checkAuthorization, function (req, res) {
+
       UserModel.find({}).then(users => 
       res.render('user_details', {"user": req.user})
       // res.json({reqUser: req.user, allUsers: users})
