@@ -45,9 +45,9 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, 'public')))
 
 // Register '.mustache' extension with The Mustache Express
-app.engine('html', mustacheExpress());
+app.engine('mst', mustacheExpress());
 
-app.set('view engine', 'html');
+app.set('view engine', 'mst');
 app.set('views', __dirname + '/src/views');
 
 

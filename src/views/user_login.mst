@@ -12,21 +12,11 @@
 
 </head>
 <body>
+{{ > menu }}
 	<div class="container mt-5 mb-5 p-5" style='background-color: white; opacity: 0.9'>
 		<h1>Login</h1>
 		<div class="text-primary">
-		<!-- {{#flash}}
-		<div class="alert alert-warning alert-dismissible fade show" role="alert">
-		  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-		    <span aria-hidden="true">&times;</span>
-		  </button>
-		  {{flash}}
-		</div>
-		{{/flash}} -->
 		{{{flash}}}
-
-
-
 		<form method="POST" action="/users/login">
 		  <div class="form-group">
 		    <label for="email">Email</label>
