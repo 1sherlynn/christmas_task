@@ -81,19 +81,18 @@ router.get('/', hasAccessCheck('user'), checkAuthorization, function (req, res) 
    console.log('checkAuthorization print from next route', req.user)
 })
 
+router.get('/signup', function (req, res) {
+  res.render('user_signup');
+})
 
-
-router.route('/signup') // path: /users/signup
-  .get((req, res, next) => {
-    res.render('user_signup');
-  })
-  .post((req, res, next) => { 
+router.post('/signup', function (req, res) {
       let newUser = new UserModel(); 
       newUser.name = req.body.name, 
       newUser.email = req.body.email,
       newUser.role = req.body.role
       newUser.setPassword(req.body.password); // call setPassword function to hash password 
     
+    console.log('called setPassword')
       // save newUser object to database 
       newUser.save((err, user) => { 
           if (err) { 
@@ -102,14 +101,15 @@ router.route('/signup') // path: /users/signup
               }); 
           } 
           else { 
-              return 
+              return (
               res.status(200).send({ 
                   message : "User added succesfully.",
                   role: user
-              }); 
+                })
+              ); 
           } 
       }); 
-  }); 
+})
 
   router.route('/login') // path: /users/login
   .get((req, res, next) => {
