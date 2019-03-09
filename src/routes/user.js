@@ -70,6 +70,13 @@ let checkAuthorization = (req, res, next) => {
     }
 }
 
+router.get('/all', function (req, res) {
+
+      UserModel.find({}).then(users => 
+      res.json({reqUser: req.user, allUsers: users})
+    )
+   console.log('checkAuthorization print from next route', req.user)
+})
 
 
 router.get('/', hasAccessCheck('user'), checkAuthorization, function (req, res) {
