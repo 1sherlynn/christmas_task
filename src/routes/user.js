@@ -14,28 +14,23 @@ function hasAccessCheck(accessLevel) {
             req.user=user
             return next(); 
         } else {
-            return req.flash('alert', 'Unauthorised access level. Only admin allowed.', '/users');
-
-          // return res.status(401).send({ 
-          //     success: false,
-          //     message : "Unauthorized access level",
-          //     status: res.statusCode
-          // })
+            return req.flash('primary', 'Unauthorised access level. Only admin allowed.', '/users');
         }
       })
     } else {
-      return req.flash('alert', 'Not Authorised. You must enter your username and password to log in.', '/users/login');
-          // return res.status(401).send({ 
-          //     success: false,
-          //     message : "Unauthorized - not logged in ",
-          //     status: res.statusCode
-          // })
+      return req.flash('dark', 'Not Authorised. You must enter your username and password to log in.', '/users/login');
+      // primary
+      // secondary
+      // success
+      // danger
+      // warning
+      // info
+      // light
+      // dark
 
     }
   }
 }
-
-// ask Micha: req.session.user.hasAccess('user') why is this not possible?
 
 
 
@@ -55,10 +50,6 @@ router.get('/admin',
   (req, res, next) => {
     console.log('you have ADMIN access!')
     res.render('admin', {"user": req.user, "isAdmin": req.session.accessAdmin})
-    // res.json({
-    //   secure: true,
-    //   data: 'admin access granted'
-    // })
   }
 )
 
@@ -71,7 +62,7 @@ let checkAuthorization = (req, res, next) => {
         next(); 
       })
     } else {
-      return req.flash('alert', 'Not Authorised. You must enter your username and password to log in.', '/users/login');
+      return req.flash('secondary', 'Not Authorised. You must enter your username and password to log in.', '/users/login');
         // return res.status(401).send({ 
         //     message : "Not Authorized",
         //     status: res.statusCode
@@ -81,7 +72,7 @@ let checkAuthorization = (req, res, next) => {
 
 
 
-router.get('/', hasAccessCheck('user'),checkAuthorization, function (req, res) {
+router.get('/', hasAccessCheck('user'), checkAuthorization, function (req, res) {
 
       UserModel.find({}).then(users => 
       res.render('user_details', {"user": req.user, "isAdmin": req.session.accessAdmin})
@@ -147,14 +138,6 @@ router.route('/signup') // path: /users/signup
 
                 return res.redirect('/users')
                   // res.render('user_edit', {"user": user[0]} )
-                // return res.status(200).send({ 
-                //     message : "User Logged In", 
-                //     status: res.statusCode,
-                //     session: req.session,
-                //     adminAccess: user.hasAccess('admin'),
-                //     userAccess: user.hasAccess('user'),
-                //     test: req.session.user.hasAccess('user')
-                // }) 
             } 
             else { 
                 return res.status(401).send({ 

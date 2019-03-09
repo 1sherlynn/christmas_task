@@ -6,17 +6,17 @@
 	<link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 <body>
-	{{{flash}}}
 	<div class="container mt-5 mb-5 p-5" style='background-color: white; opacity: 0.9'>
 		<h1>User Details</h1>
-		{{#flash}}
-		<div class="alert alert-warning alert-dismissible fade show" role="alert">
+		<!-- {{#flash}}
+		<div class="alert alert-{{flash.type}} alert-dismissible fade show" role="alert">
 		  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
 		    <span aria-hidden="true">&times;</span>
 		  </button>
 		  {{flash}}
 		</div>
-		{{/flash}}
+		{{/flash}} -->
+		{{{> flash}}}
 
 
 		<div class="text-primary mt-3">
