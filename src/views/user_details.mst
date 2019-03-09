@@ -6,6 +6,7 @@
 	<link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 <body>
+{{ > menu }}
 	<div class="container mt-5 mb-5 p-5" style='background-color: white; opacity: 0.9'>
 		<h1>User Details</h1>
 		<!-- {{#flash}}
