@@ -103,4 +103,9 @@ app.use('/api', api)
 app.use('/view', view)
 app.use('/secure', secure)
 app.use('/users', user)
-app.listen(port, () => console.log(`App listening on port ${port}!`))
+
+app.listen(process.env.PORT || port, () => console.log(`App listening on port ${port}!`))
+
+
+
+
