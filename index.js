@@ -1,5 +1,6 @@
 const express = require('express')
 const expressValidator = require('express-validator');
+require('dotenv').config()
 var sassMiddleware = require('node-sass-middleware');
 var path = require('path');
 const app = express()
@@ -22,7 +23,8 @@ app.use(expressValidator());
 app.use(cookieParser());
 
 var mongoose = require('mongoose');
-var db_url = 'mongodb://localhost:27017/books';
+// 'mongodb://localhost:27017/books';
+var db_url = process.env.MONGOLAB_URI;
 
 mongoose.connect(db_url);
 mongoose.Promise = global.Promise;
