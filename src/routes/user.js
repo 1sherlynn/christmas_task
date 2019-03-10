@@ -196,20 +196,23 @@ router.route('/profile/:id') // path: /users/:id
   })
   .post(function (req, res) {
     console.log('put action b4')
-    UserModel.findOneAndUpdate(
-      { _id: req.params.id}, // search query 
-      { 
-        name: req.body.name
-      },
-      { new: true }) 
-    .then(user => { 
- console.log('put action done')
-     res.render('user_profile', {"user": user, "isAdmin": req.session.accessAdmin})
-    })
-    .catch(err => { 
-      res.send(err)
-    })
-  })
+
+    if (req.body.name) {
+      UserModel.findOneAndUpdate(
+        { _id: req.params.id}, { name: req.body.name }, { new: true })
+        .then(user => { 
+         console.log('put action done')
+         res.render('user_profile', {"user": user, "isAdmin": req.session.accessAdmin})
+        })
+        .catch(err => { 
+          res.send(err)
+        })
+    } else if (req.body.oldPassword && req.body.newPassword && req.body.confirmPassword) {
+      if (req.body.newPassword === req.body.confirmPassword) {
+        console.log('sth')
+      }
+   }
+ })
   .delete(function (req, res) {
     UserModel
     .findOneAndRemove({
