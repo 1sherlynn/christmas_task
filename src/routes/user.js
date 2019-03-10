@@ -88,6 +88,12 @@ router.get('/', hasAccessCheck('user'), checkAuthorization, function (req, res) 
    console.log('checkAuthorization print from next route', req.user)
 })
 
+router.get('/profile', hasAccessCheck('user'), checkAuthorization, function (req, res) {
+      UserModel.find({}).then(users => 
+      res.render('user_profile', {"user": req.user, "isAdmin": req.session.accessAdmin})
+    )
+})
+
 router.get('/signup', function (req, res) {
   res.render('user_signup');
 })
