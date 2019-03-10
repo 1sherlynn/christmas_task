@@ -6,6 +6,7 @@ var q2m = require('query-to-mongo')
 let UserModel = require('../../src/model/user')
 let validate = require("validate.js-express") 
 const path = require('path')
+const sharp = require('sharp');
 
 var storage = multer.diskStorage({
   destination: 'public/uploads/userimage/' ,
@@ -214,10 +215,35 @@ router.post('/profile-image/:id', (req, res) => {
         res.render('user_profile', {image_error: err})
       } else {
         let avatar = req.file.path.substring(6, 1000);
+        let image = req.file.path
         UserModel.findOneAndUpdate(
         { _id: req.params.id}, { avatar: avatar }, { new: true })
         .then(user => { 
-         res.render('user_profile', {"user": user, "isAdmin": req.session.accessAdmin})
+          const imagePath = path.join(__dirname + '../../../public/uploads/userimage/userimage_5c83e3ab8bcaf10017d70fb4.png');
+          const outputImageName = req.file.filename;
+          const outputImagePath = path.join(__dirname + '../../../public/uploads/userimagethumb/'+ outputImageName);
+           
+sharp(imagePath).resize(200,200, { fit: "inside" }).toFile(outputImagePath, function(err) {
+  if (err) {
+    throw err;
+  } else {
+     res.send({image: "success"})
+  }
+  // output.jpg is a 300 pixels wide and 200 pixels high image
+  // containing a scaled and cropped version of input.jpg
+});
+
+          // sharp(imagePath)
+          // .resize(200, 200)
+          // // .toFile('resized.png')
+          // .then( (ImageResult) => {
+          //   res.send({image: ImageResult})
+          // })
+          // .catch( () => {
+          //   res.send({error: 'error sharp'})
+          // });
+
+          // res.render('user_profile', {"user": user, "isAdmin": req.session.accessAdmin})
         })
         .catch(err => { 
           res.send(err)
