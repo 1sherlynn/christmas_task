@@ -23,7 +23,8 @@ let UserSchema = new mongoose.Schema({
   	required: true
   },
     hash: String, 
-    salt: String
+    salt: String,
+    avatar: String
 })
 
 UserSchema.plugin(require('mongoose-role'), {

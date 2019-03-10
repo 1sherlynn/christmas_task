@@ -23,6 +23,14 @@
 	    return false;
 	  }
 	}
+
+	function validateImage() {
+	  var x = document.forms["avatar_form"]["avatar"].value;
+	  if (x === '') {
+	    alert("Please select an image.");
+	    return false;
+	  }
+	}
 	</script>
 </head>
 <body>
@@ -33,16 +41,21 @@
 		{{/flash}} -->
 		{{{flash}}}
 
-		<div class="text-primary mt-3">
-			<p><b>Id:</b> {{user.id}}</p>
-			<p><b>Name:</b> {{user.name}} |  <b>Email:</b> {{user.email}} </p>
-			<p><b>Role:</b> {{user.role}}</p>
+		<div class="text-primary mt-3 row">
+			<div class="col-md-6">
+				<p><b>Id:</b> {{user.id}} | <b>Role:</b> {{user.role}}</p>
+				<p><b>Name:</b> {{user.name}} |  <b>Email:</b> {{user.email}} </p>
+				<p><b>Avatar:</b> {{user.avatar}}</p>
+			</div>
+			<div class="col-md-6">
+				<img src='/uploads/userimage/userimage_5c83e3ab8bcaf10017d70fb4.png' alt="avatar" width="200px">
+			</div>
 		</div>
 
 	<div class="row">
 		<div class="col-md-6">
 			<div class="row">
-				<div class="mt-3 col-md-6" style='background-color: white; opacity: 0.9'>
+				<div class="mt-3 col-md-12" style='background-color: white; opacity: 0.9'>
 					<h4>Edit Name</h4>
 					<div class="text-primary">
 					<form method="POST" action="/users/profile/{{user.id}}">
@@ -56,13 +69,14 @@
 					</form>		
 					</div>
 				</div>
-				<div class="mt-3 col-md-6" style='background-color: white; opacity: 0.9'>
+				<div class="mt-4 col-md-12" style='background-color: white; opacity: 0.9'>
 				<h4>Upload Profile Image</h4>
 				<div class="text-primary">
-				<form method="POST" action="/users/profile/{{user.id}}" enctype='multipart/form-data'>
+					{{#image_error}}<p>{{image_error}}</p>{{/image_error}}
+				<form name="avatar_form" method="POST" action="/users/profile-image/{{user.id}}" enctype='multipart/form-data' onsubmit="return validateImage()">
 				  <div class="form-group">
 				    <label for="avatar">Avatar Image</label>
-				    <input type="file" name="avatar"/>
+				    <input type="file" name="avatar" accept="image/png, image/jpeg"/>
 				  </div>
 				  <div class="form-group">
 				    <button type="submit" class="btn btn-primary mr-2">Submit</button>	

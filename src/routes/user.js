@@ -1,9 +1,20 @@
 var express = require('express')
 var router = express.Router()
+var multer  = require('multer')
 var moment = require('moment');
 var q2m = require('query-to-mongo')
 let UserModel = require('../../src/model/user')
 let validate = require("validate.js-express") 
+const path = require('path')
+
+var storage = multer.diskStorage({
+  destination: 'public/uploads/userimage/' ,
+  filename: function (req, file, cb) {
+    cb(null,  'userimage_' + req.params.id + path.extname(file.originalname))
+  }
+})
+
+var upload = multer({ storage: storage }).single('avatar')
 
 let constraints = {
     newPassword: {
@@ -195,8 +206,25 @@ router.route('/logout')
     //   "session": req.session
     // });
   })
-  
 
+
+router.post('/profile-image/:id', (req, res) => {
+    upload(req, res, (err) => {
+      if (err) {
+        res.render('user_profile', {image_error: err})
+      } else {
+        UserModel.findOneAndUpdate(
+        { _id: req.params.id}, { avatar: req.file.path }, { new: true })
+        .then(user => { 
+         res.render('user_profile', {"user": user, "isAdmin": req.session.accessAdmin})
+        })
+        .catch(err => { 
+          res.send(err)
+        })
+      }
+    })
+  })
+   
 router.route('/profile/:id') // path: /users/:id
   .get((req, res) => {
     UserModel.find({ _id: req.params.id })
@@ -207,8 +235,6 @@ router.route('/profile/:id') // path: /users/:id
       })
   })
   .post(function (req, res) {
-    console.log('put action b4')
-
     if (req.body.name) {
       UserModel.findOneAndUpdate(
         { _id: req.params.id}, { name: req.body.name }, { new: true })
