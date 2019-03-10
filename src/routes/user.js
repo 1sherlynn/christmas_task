@@ -204,7 +204,7 @@ router.route('/profile/:id') // path: /users/:id
       { new: true }) 
     .then(user => { 
  console.log('put action done')
-      res.send(user)
+     res.render('user_profile', {"user": user, "isAdmin": req.session.accessAdmin})
     })
     .catch(err => { 
       res.send(err)
