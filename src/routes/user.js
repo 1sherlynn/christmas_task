@@ -3,8 +3,20 @@ var router = express.Router()
 var moment = require('moment');
 var q2m = require('query-to-mongo')
 let UserModel = require('../../src/model/user')
+let validate = require("validate.js-express") 
 
-
+let constraints = {
+    newPassword: {
+        presence: true,
+        length: {
+            minimum: 6,
+            message: "must be at least 6 characters"
+        }
+    },
+    oldPassword: {
+      presence: true
+    }
+}
 
 function hasAccessCheck(accessLevel) {
   return function(req, res, next) {
@@ -207,40 +219,41 @@ router.route('/profile/:id') // path: /users/:id
         .catch(err => { 
           res.send(err)
         })
-    } else if (req.body.oldPassword && req.body.newPassword && req.body.confirmPassword) {
+    } else if (req.body.oldPassword) {
 
+      res.send({newPassword: req.body.newPassword})
 
-    UserModel.findOneAndUpdate({ _id: req.params.id}, function(err, user) { 
-        if (user === null) { 
-            return res.status(401).send({ 
-                message : "User not found.",
-                status: res.statusCode
-            }); 
-        } 
-        else { 
-            if (user.validPassword(req.body.password)) { 
-                if (req.body.newPassword === req.body.confirmPassword) {
-                  { password: req.body.newPassword }
-                  res.render('user_profile', {"user": user, "isAdmin": req.session.accessAdmin})
-                } else {
-                  return res.status(401).send({ 
-                      message : "New Password and Confirmation Password do not match",
-                      status: res.statusCode
-                  }); 
-                }
-            } 
-            else { 
-                return res.status(401).send({ 
-                    message : "Old Password is incorrect",
-                    status: res.statusCode
-                }); 
-            } 
-        } 
-    }); 
+    // UserModel.findOneAndUpdate({ _id: req.params.id}, function(err, user) { 
+    //     if (user === null) { 
+    //         return res.status(401).send({ 
+    //             message : "User not found.",
+    //             status: res.statusCode
+    //         }); 
+    //     } 
+    //     else { 
+    //         if (user.validPassword(req.body.password)) { 
+    //             if (req.body.newPassword === req.body.confirmPassword) {
+    //               { password: req.body.newPassword }
+    //               res.render('user_profile', {"user": user, "isAdmin": req.session.accessAdmin})
+    //             } else {
+    //               return res.status(401).send({ 
+    //                   message : "New Password and Confirmation Password do not match",
+    //                   status: res.statusCode
+    //               }); 
+    //             }
+    //         } 
+    //         else { 
+    //             return res.status(401).send({ 
+    //                 message : "Old Password is incorrect",
+    //                 status: res.statusCode
+    //             }); 
+    //         } 
+    //     } 
+    // }); 
 
-          if (req.body.newPassword === req.body.confirmPassword) {
-            console.log('sth')
-          }
+       
+   } else {
+     res.send({error: 'none of the conditions'})
    }
  })
   .delete(function (req, res) {
