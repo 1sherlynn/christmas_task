@@ -22,9 +22,8 @@
 			<p><b>Is Admin?: </b> {{isAdmin}}</p>
 		</div>
 	
-
 		<div class="mt-5">
-			<a href="/users/profile" class="btn btn-info mr-2">Profile Page</a>
+			<a href="/users/profile/{{user.id}}" class="btn btn-info mr-2">Profile Page</a>
 		{{#isAdmin}}
 		  	<a href="/users/admin" class="btn btn-info mr-2">Access Admin Area</a>
 		{{/isAdmin}}

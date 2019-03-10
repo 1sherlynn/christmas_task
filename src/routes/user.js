@@ -88,11 +88,6 @@ router.get('/', hasAccessCheck('user'), checkAuthorization, function (req, res) 
    console.log('checkAuthorization print from next route', req.user)
 })
 
-router.get('/profile', hasAccessCheck('user'), checkAuthorization, function (req, res) {
-      UserModel.find({}).then(users => 
-      res.render('user_profile', {"user": req.user, "isAdmin": req.session.accessAdmin})
-    )
-})
 
 router.get('/signup', function (req, res) {
   res.render('user_signup');
@@ -190,17 +185,17 @@ router.route('/logout')
   })
   
 
-router.route('/:id') // path: /users/:id
+router.route('/profile/:id') // path: /users/:id
   .get((req, res) => {
     UserModel.find({ _id: req.params.id })
     .then(user => { 
-      res.send(user[0])
-      // res.render('user_edit', {"user": user[0]} )
+      res.render('user_profile', {"user": user[0], "isAdmin": req.session.accessAdmin})
       }).catch(err => { 
         res.send(err)
       })
   })
-  .put(function (req, res) {
+  .post(function (req, res) {
+    console.log('put action b4')
     UserModel.findOneAndUpdate(
       { _id: req.params.id}, // search query 
       { 
@@ -208,6 +203,7 @@ router.route('/:id') // path: /users/:id
       },
       { new: true }) 
     .then(user => { 
+ console.log('put action done')
       res.send(user)
     })
     .catch(err => { 
