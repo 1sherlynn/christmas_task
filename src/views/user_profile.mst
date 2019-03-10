@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title>User Details</title>
+	<title>Profile Page</title>
 	<link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 <body>
 {{ > menu }}
 	<div class="container mt-5 mb-5 p-5" style='background-color: white; opacity: 0.9'>
-		<h1>User Details</h1>
+		<h1>Profile Page</h1>
 		<!-- {{#flash}}
 		{{/flash}} -->
 		{{{flash}}}
