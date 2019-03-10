@@ -27,6 +27,7 @@
     "mongoose": "^5.4.0",
     "mongoose-role": "^3.0.0",
     "mongoose-unique-validator": "^2.0.2",
+    "multer": "^1.4.1",
     "mustache-express": "^1.2.8",
     "node-sass-middleware": "^0.11.0",
     "nodemon": "^1.18.9",

@@ -238,16 +238,14 @@ router.route('/profile/:id') // path: /users/:id
                    console.log('user before', user)
                    user.setPassword(req.body.newPassword)
                    console.log('user after', user)
-
                            UserModel.findOneAndUpdate(
                             { _id: req.params.id}, { salt: user.salt, hash: user.hash }, { new: true })
                             .then(user => { 
-                             return req.flash('success', "Password changed");
+                             return req.flash('success', "Password successfully changed");
                             })
                             .catch(err => { 
                               res.send(err)
                             })
-
                  })
                  .catch(err => {
                     res.send(err)
