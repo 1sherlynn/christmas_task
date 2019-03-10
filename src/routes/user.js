@@ -142,10 +142,12 @@ router.post('/signup', function (req, res) {
     // find user with requested email 
     UserModel.findOne({ email : req.body.email }, function(err, user) { 
         if (user === null) { 
-            return res.status(401).send({ 
-                message : "User not found.",
-                status: res.statusCode
-            }); 
+            return (
+              res.status(401).send({ 
+                  message : "User not found.",
+                  status: res.statusCode
+              })
+            )
         } 
         else { 
             if (user.validPassword(req.body.password)) { 
@@ -160,10 +162,8 @@ router.post('/signup', function (req, res) {
                   // res.render('user_edit', {"user": user[0]} )
             } 
             else { 
-                return res.status(401).send({ 
-                    message : "Wrong Password",
-                    status: res.statusCode
-                }); 
+                  console.log('checked invalid password')
+                  return res.status(401).send({ message : "Wrong Password", status: res.statusCode})
             } 
         } 
     }); 
@@ -219,38 +219,46 @@ router.route('/profile/:id') // path: /users/:id
         .catch(err => { 
           res.send(err)
         })
-    } else if (req.body.oldPassword) {
+    } else if (req.body.oldPassword && req.body.oldPassword && req.body.oldPassword) {
 
-      res.send({newPassword: req.body.newPassword})
+        UserModel.findOne({ _id: req.params.id}, function(err, user) { 
+          if (user === null) { 
+            console.log('user invalid')
+            return ( res.status(401).send({ 
+                  message : "User not found.",
+                  status: res.statusCode
+              })
+            )
+          } 
+          else { 
+              if (user.validPassword(req.body.oldPassword)) { 
+                console.log('valid password')
+                 UserModel.findOne({ _id: req.params.id})
+                 .then(user => {
+                   console.log('user before', user)
+                   user.setPassword(req.body.newPassword)
+                   console.log('user after', user)
 
-    // UserModel.findOneAndUpdate({ _id: req.params.id}, function(err, user) { 
-    //     if (user === null) { 
-    //         return res.status(401).send({ 
-    //             message : "User not found.",
-    //             status: res.statusCode
-    //         }); 
-    //     } 
-    //     else { 
-    //         if (user.validPassword(req.body.password)) { 
-    //             if (req.body.newPassword === req.body.confirmPassword) {
-    //               { password: req.body.newPassword }
-    //               res.render('user_profile', {"user": user, "isAdmin": req.session.accessAdmin})
-    //             } else {
-    //               return res.status(401).send({ 
-    //                   message : "New Password and Confirmation Password do not match",
-    //                   status: res.statusCode
-    //               }); 
-    //             }
-    //         } 
-    //         else { 
-    //             return res.status(401).send({ 
-    //                 message : "Old Password is incorrect",
-    //                 status: res.statusCode
-    //             }); 
-    //         } 
-    //     } 
-    // }); 
+                           UserModel.findOneAndUpdate(
+                            { _id: req.params.id}, { salt: user.salt, hash: user.hash }, { new: true })
+                            .then(user => { 
+                             return req.flash('success', "Password changed");
+                            })
+                            .catch(err => { 
+                              res.send(err)
+                            })
 
+                 })
+                 .catch(err => {
+                    res.send(err)
+                  })
+              } 
+              else { 
+                console.log('invalid password')
+                return req.flash('danger', "Old Password is incorrect");
+              } 
+          } 
+      }); 
        
    } else {
      res.send({error: 'none of the conditions'})

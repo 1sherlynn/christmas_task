@@ -4,11 +4,17 @@
 	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<title>Profile Page</title>
 	<link rel="stylesheet" href="/stylesheets/style.css">
+	<!-- jquery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<!-- bootstrap -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
 	<script>
 	function validateForm() {
 	  var x = document.forms["password_form"]["newPassword"].value;
 	  var y = document.forms["password_form"]["confirmPassword"].value;
-	  if (x.length < 7) {
+	  if (x.length < 6) {
 	    alert("New Password needs a minimum of 6 characters.");
 	    return false;
 	  }
@@ -29,30 +35,28 @@
 
 		<div class="text-primary mt-3">
 			<p><b>Id:</b> {{user.id}}</p>
-			<p><b>Name:</b> {{user.name}}</p>
-			<p><b>Email:</b> {{user.email}}</p>
+			<p><b>Name:</b> {{user.name}} |  <b>Email:</b> {{user.email}} </p>
 			<p><b>Role:</b> {{user.role}}</p>
-			<p><b>Is Admin?: </b> {{isAdmin}}</p>
 		</div>
 
-
-		<div class="mt-2" style='background-color: white; opacity: 0.9'>
-			<h3>Edit Name</h3>
+	<div class="row">
+		<div class="mt-3 col-md-6" style='background-color: white; opacity: 0.9'>
+			<h4>Edit Name</h4>
 			<div class="text-primary">
 			<form method="POST" action="/users/profile/{{user.id}}">
 			  <div class="form-group">
 			    <label for="name">Name</label>
 			    <input type="text" class="form-control" name="name" placeholder="Name">
 			  </div>
-			  <div class="mt-3">
-			  	<button type="submit" class="btn btn-primary mr-2">Submit</button>	
+			  <div class="form-group">
+			    <button type="submit" class="btn btn-primary mr-2">Submit</button>	
 			  </div>
 			</form>		
 			</div>
 		</div>
 
-		<div class="mt-3" style='background-color: white; opacity: 0.9'>
-			<h3>Change Password</h3>
+		<div class="mt-3 col-md-6" style='background-color: white; opacity: 0.9' >
+			<h4>Change Password</h4>
 			<div class="text-primary">
 		<form name="password_form" method="POST" action="/users/profile/{{user.id}}" onsubmit="return validateForm()">
 			  <div class="form-group">
@@ -73,6 +77,7 @@
 			</form>		
 			</div>
 		</div>
+	</div>
 
 		<div class="mt-5">
 			<a href="/users/profile" class="btn btn-info mr-2">Profile Page</a>
