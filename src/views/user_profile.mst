@@ -48,7 +48,7 @@
 				<p><b>Avatar:</b> {{user.avatar}}</p>
 			</div>
 			<div class="col-md-6">
-				<img src='/uploads/userimage/userimage_5c83e3ab8bcaf10017d70fb4.png' alt="avatar" width="200px">
+				<img src={{user.avatar}} alt="avatar" width="200px">
 			</div>
 		</div>
 

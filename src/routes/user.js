@@ -213,8 +213,9 @@ router.post('/profile-image/:id', (req, res) => {
       if (err) {
         res.render('user_profile', {image_error: err})
       } else {
+        let avatar = req.file.path.substring(6, 1000);
         UserModel.findOneAndUpdate(
-        { _id: req.params.id}, { avatar: req.file.path }, { new: true })
+        { _id: req.params.id}, { avatar: avatar }, { new: true })
         .then(user => { 
          res.render('user_profile', {"user": user, "isAdmin": req.session.accessAdmin})
         })
