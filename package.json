@@ -22,6 +22,7 @@
     "express-flash-notification": "^0.5.0",
     "express-session": "^1.15.6",
     "express-validator": "^5.3.1",
+    "fs": "0.0.1-security",
     "jsonwebtoken": "^8.4.0",
     "moment": "^2.23.0",
     "mongoose": "^5.4.0",
