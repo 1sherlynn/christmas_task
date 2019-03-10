@@ -32,7 +32,8 @@
     "nodemon": "^1.18.9",
     "path": "^0.12.7",
     "query-to-mongo": "^0.9.0",
-    "validate.js": "^0.12.0"
+    "validate.js": "^0.12.0",
+    "validate.js-express": "^0.1.5"
   },
   "devDependencies": {
     "eslint": "^5.15.1",

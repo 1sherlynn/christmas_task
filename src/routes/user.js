@@ -208,9 +208,39 @@ router.route('/profile/:id') // path: /users/:id
           res.send(err)
         })
     } else if (req.body.oldPassword && req.body.newPassword && req.body.confirmPassword) {
-      if (req.body.newPassword === req.body.confirmPassword) {
-        console.log('sth')
-      }
+
+
+    UserModel.findOneAndUpdate({ _id: req.params.id}, function(err, user) { 
+        if (user === null) { 
+            return res.status(401).send({ 
+                message : "User not found.",
+                status: res.statusCode
+            }); 
+        } 
+        else { 
+            if (user.validPassword(req.body.password)) { 
+                if (req.body.newPassword === req.body.confirmPassword) {
+                  { password: req.body.newPassword }
+                  res.render('user_profile', {"user": user, "isAdmin": req.session.accessAdmin})
+                } else {
+                  return res.status(401).send({ 
+                      message : "New Password and Confirmation Password do not match",
+                      status: res.statusCode
+                  }); 
+                }
+            } 
+            else { 
+                return res.status(401).send({ 
+                    message : "Old Password is incorrect",
+                    status: res.statusCode
+                }); 
+            } 
+        } 
+    }); 
+
+          if (req.body.newPassword === req.body.confirmPassword) {
+            console.log('sth')
+          }
    }
  })
   .delete(function (req, res) {

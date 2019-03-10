@@ -1872,7 +1872,7 @@ lodash.once@^4.0.0:
   resolved "https://registry.yarnpkg.com/lodash.once/-/lodash.once-4.1.1.tgz#0dd3971213c7c56df880977d504c88fb471a97ac"
   integrity sha1-DdOXEhPHxW34gJd9UEyI+0cal6w=
 
-lodash@^4.0.0, lodash@^4.17.10, lodash@^4.17.11, lodash@~4.17.10:
+lodash@^4.0.0, lodash@^4.17.1, lodash@^4.17.10, lodash@^4.17.11, lodash@~4.17.10:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
 
@@ -2028,6 +2028,11 @@ mixin-deep@^1.2.0:
   resolved "http://registry.npmjs.org/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
   dependencies:
     minimist "0.0.8"
+
+moment@^2.22.2:
+  version "2.24.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
+  integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
 
 moment@^2.23.0:
   version "2.23.0"
@@ -3417,6 +3422,15 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
+
+validate.js-express@^0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/validate.js-express/-/validate.js-express-0.1.5.tgz#5f5bab35d5a95a3bf5834c21a6a80f49dbf84cec"
+  integrity sha512-0bPd/hP/+5ZygaLYbM02j/aizXASt6viMAsySqAh3X0tsOQEjQrAuVFxj3OQ74rmG7lKLOCpfOJeIp1EM9uLyQ==
+  dependencies:
+    lodash "^4.17.1"
+    moment "^2.22.2"
+    validate.js "^0.12.0"
 
 validate.js@^0.12.0:
   version "0.12.0"
