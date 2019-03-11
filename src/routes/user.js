@@ -264,7 +264,9 @@ router.route('/profile/:id') // path: /users/:id
         { _id: req.params.id}, { name: req.body.name }, { new: true })
         .then(user => { 
          console.log('put action done')
-         res.render('user_profile', {"user": user, "isAdmin": req.session.accessAdmin})
+         
+         return res.redirect('/users/profile/'+req.params.id)
+         // res.render('user_profile', {"user": user, "isAdmin": req.session.accessAdmin})
         })
         .catch(err => { 
           res.send(err)
@@ -291,7 +293,8 @@ router.route('/profile/:id') // path: /users/:id
                            UserModel.findOneAndUpdate(
                             { _id: req.params.id}, { salt: user.salt, hash: user.hash }, { new: true })
                             .then(user => { 
-                             return req.flash('success', "Password successfully changed");
+                             return req.flash('success', "Password successfully changed", '/users/profile/'+req.params.id); 
+                             //  ADD RENDER TO ROUTE EVEN THO IT MIGHT BE THE "SAME"
                             })
                             .catch(err => { 
                               res.send(err)
@@ -303,7 +306,7 @@ router.route('/profile/:id') // path: /users/:id
               } 
               else { 
                 console.log('invalid password')
-                return req.flash('danger', "Old Password is incorrect");
+                return req.flash('danger', "Old Password is incorrect", '/users/profile/'+req.params.id);
               } 
           } 
       }); 
