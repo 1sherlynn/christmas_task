@@ -223,7 +223,9 @@ router.post('/profile-image/:id', (req, res) => {
           const imagePath = path.join(__dirname + '../../../public/uploads/userimage/userimage_5c83e3ab8bcaf10017d70fb4.png');
           const outputImageName = req.file.filename;
           const outputImagePath = path.join(__dirname + '../../../public/uploads/userimagethumb/'+ outputImageName);
-          const ftpImageUrl = "https://media.owlgo.co/source/sherlynn/"+Date.now().toString().slice(0,9)+req.file.filename
+          const ftpFileName = Date.now().toString().slice(0,9)+req.file.filename
+          console.log('FTP FILE NAME 1', ftpFileName)
+          const ftpImageUrl = "https://media.owlgo.co/source/sherlynn/"+ftpFileName
            
           sharp(imagePath).resize(200,200, { fit: "inside" }).toFile(outputImagePath, function(err) {
             if (err) {
@@ -238,15 +240,17 @@ router.post('/profile-image/:id', (req, res) => {
                 return
               }
             })
+            console.log('FTP FILE NAME 2', ftpFileName)
 
               var ftp = new PromiseFtp();
               ftp.connect({host: process.env.FTP_HOST, user: process.env.FTP_USERNAME, password: process.env.FTP_PASSWORD})
               .then(function (serverMessage) {
                 console.log('ftp connected', serverMessage)
-                console.log('output path', Date.now().toString().slice(0,9)+req.file.filename)
-                return ftp.put(outputImagePath, Date.now().toString().slice(0,9)+req.file.filename);
+                console.log('FTP FILE NAME 3', ftpFileName)
+                return ftp.put(outputImagePath, ftpFileName);
               }).then(function () {
                 console.log('ftp upload success')
+                console.log('FTP FILE NAME 4', ftpFileName)
                 return ftp.end();
               });
 
