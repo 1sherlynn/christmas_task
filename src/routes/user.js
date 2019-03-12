@@ -8,6 +8,7 @@ let validate = require("validate.js-express")
 const path = require('path')
 const sharp = require('sharp');
 const fs = require('fs')
+var PromiseFtp = require('promise-ftp');
 sharp.cache(false);
 
 var storage = multer.diskStorage({
@@ -222,20 +223,35 @@ router.post('/profile-image/:id', (req, res) => {
           const imagePath = path.join(__dirname + '../../../public/uploads/userimage/userimage_5c83e3ab8bcaf10017d70fb4.png');
           const outputImageName = req.file.filename;
           const outputImagePath = path.join(__dirname + '../../../public/uploads/userimagethumb/'+ outputImageName);
+          const ftpImageUrl = "https://media.owlgo.co/source/sherlynn/"+Date.now().toString().slice(0,9)+req.file.filename
            
           sharp(imagePath).resize(200,200, { fit: "inside" }).toFile(outputImagePath, function(err) {
             if (err) {
               throw err;
             } else {
 
-              avatarThumb = avatar.slice(0, 18) + 'thumb' + avatar.slice(18)
-              fs.unlink(imagePath, (err) => {
-                if (err) {
-                  console.error(err)
-                  return
-                }
-              })
-              UserModel.findOneAndUpdate({ _id: req.params.id}, { avatar: avatarThumb }, { new: true })
+          
+            let avatarThumb = avatar.slice(0, 18) + 'thumb' + avatar.slice(18)
+            fs.unlink(imagePath, (err) => {
+              if (err) {
+                console.error(err)
+                return
+              }
+            })
+
+              var ftp = new PromiseFtp();
+              ftp.connect({host: process.env.FTP_HOST, user: process.env.FTP_USERNAME, password: process.env.FTP_PASSWORD})
+              .then(function (serverMessage) {
+                console.log('ftp connected', serverMessage)
+                console.log('output path', Date.now().toString().slice(0,9)+req.file.filename)
+                return ftp.put(outputImagePath, Date.now().toString().slice(0,9)+req.file.filename);
+              }).then(function () {
+                console.log('ftp upload success')
+                return ftp.end();
+              });
+
+            
+              UserModel.findOneAndUpdate({ _id: req.params.id}, { avatar: ftpImageUrl }, { new: true })
               .then(user => { 
                   res.render('user_profile', {"user": user})
               })
