@@ -224,6 +224,7 @@ router.post('/profile-image/:id', (req, res) => {
           const outputImageName = req.file.filename;
           const outputImagePath = path.join(__dirname + '../../../public/uploads/userimagethumb/'+ outputImageName);
           const ftpFileName = Date.now().toString().slice(0,9)+req.file.filename
+           // const ftpFileName = req.file.filename+"?timestring="+Date.now()
           console.log('FTP FILE NAME 1', ftpFileName)
           const ftpImageUrl = "https://media.owlgo.co/source/sherlynn/"+ftpFileName
            
@@ -231,8 +232,6 @@ router.post('/profile-image/:id', (req, res) => {
             if (err) {
               throw err;
             } else {
-
-          
             let avatarThumb = avatar.slice(0, 18) + 'thumb' + avatar.slice(18)
             fs.unlink(imagePath, (err) => {
               if (err) {
@@ -241,7 +240,6 @@ router.post('/profile-image/:id', (req, res) => {
               }
             })
             console.log('FTP FILE NAME 2', ftpFileName)
-
               var ftp = new PromiseFtp();
               ftp.connect({host: process.env.FTP_HOST, user: process.env.FTP_USERNAME, password: process.env.FTP_PASSWORD})
               .then(function (serverMessage) {
@@ -257,7 +255,7 @@ router.post('/profile-image/:id', (req, res) => {
             
               UserModel.findOneAndUpdate({ _id: req.params.id}, { avatar: ftpImageUrl }, { new: true })
               .then(user => { 
-                  res.render('user_profile', {"user": user})
+                  return res.redirect('/users/profile/'+req.params.id)
               })
               .catch(err => { 
                 res.send(err)
