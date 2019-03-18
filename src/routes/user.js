@@ -224,7 +224,7 @@ router.post('/profile-image/:id', (req, res) => {
           const outputImageName = req.file.filename;
           const outputImagePath = path.join(__dirname + '../../../public/uploads/userimagethumb/'+ outputImageName);
           const ftpFileName = Date.now().toString().slice(0,9)+req.file.filename
-           // const ftpFileName = req.file.filename+"?timestring="+Date.now()
+           // const ftpFileName = req.file.filename+"?v="+Date.now()
           console.log('FTP FILE NAME 1', ftpFileName)
           const ftpImageUrl = "https://media.owlgo.co/source/sherlynn/"+ftpFileName
            
@@ -251,11 +251,11 @@ router.post('/profile-image/:id', (req, res) => {
                 console.log('FTP FILE NAME 4', ftpFileName)
                 return ftp.end();
               });
-
             
               UserModel.findOneAndUpdate({ _id: req.params.id}, { avatar: ftpImageUrl }, { new: true })
               .then(user => { 
-                  return res.redirect('/users/profile/'+req.params.id)
+                  return req.flash('success', "Image successfully changed", '/users/profile/'+req.params.id); 
+                  // return res.redirect('/users/profile/'+req.params.id)
               })
               .catch(err => { 
                 res.send(err)

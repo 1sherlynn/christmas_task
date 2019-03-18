@@ -39,11 +39,8 @@
 <body>
 {{ > menu }}
 	<div class="container mt-5 mb-5 p-5" style='background-color: white; opacity: 0.9'>
-		<h1>Profile Page</h1>
-		<!-- {{#flash}}
-		{{/flash}} -->
 		{{{flash}}}
-
+		<h1>Profile Page</h1>
 		<div class="text-primary mt-3 row">
 			<div class="col-md-6">
 				<p><b>Id:</b> {{user.id}} | <b>Role:</b> {{user.role}}</p>
